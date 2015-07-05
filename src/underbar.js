@@ -196,12 +196,28 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (arguments.length < 2)
+      return (_.indexOf(collection, false) == -1) ? true : false;
+
+    // if it has undefined values 
+    if(_.indexOf(collection, undefined) !== -1)
+      return false;
+    return _.reduce(collection, function(truthTest, item) { 
+      if (!iterator(item))
+        truthTest = false;
+        return truthTest;
+    }, true);
+
+    return true;
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    if (collection.length == 0) return false;
     // TIP: There's a very clever way to re-use every() here.
+    return _.every(collection, iterator) ;
+    return false;
   };
 
 
