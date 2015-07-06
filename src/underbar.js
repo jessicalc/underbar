@@ -342,7 +342,7 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    var newArray = array.slice(0);
+    var newArray = array.slice(0), temp;
     for (var i = 0; i < newArray.length; i++) {
       temp = Math.floor(Math.random() * newArray.length);
       var word = newArray[temp];
