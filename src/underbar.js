@@ -41,7 +41,7 @@
     if (n > array.length)
       return array;
     else 
-      return n === undefined? array[array.length - 1] : array.slice(array.length - n, array.length);
+      return n === undefined ? array[array.length - 1] : array.slice(array.length - n, array.length);
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -119,7 +119,7 @@
     var result = [];
     _.each(collection, function(item, index, collection) {
       result.push(iterator(item));
-    })
+    });
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -166,11 +166,9 @@
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
     if (accumulator == null)
-      var accumulator = collection.shift();
-    else
-      var accumulator = accumulator;
+      accumulator = collection.shift();
     _.each(collection, function(item, index, collection) {
-      accumulator = iterator(accumulator, item)
+      accumulator = iterator(accumulator, item);
     })
     return accumulator;
   };
