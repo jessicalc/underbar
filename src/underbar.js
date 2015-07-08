@@ -208,9 +208,19 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    if (collection.length == 0) return false;
     // TIP: There's a very clever way to re-use every() here.
-    return _.every(collection, iterator) ;
+    if (collection.length == 0) return false;
+    if (arguments.length < 2)
+      return (_.indexOf(collection, true) !== -1) ? true : false;
+    if (_.every(collection, iterator) == true) {
+      return true;
+    } else {
+      return _.reduce(collection, function(truthTest, item) {
+        if (iterator(item) == true || typeof item == "string")
+          truthTest = true;
+        return truthTest;
+      }, false)
+    };
     return false;
   };
 
