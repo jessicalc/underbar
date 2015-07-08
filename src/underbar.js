@@ -196,17 +196,13 @@
     // TIP: Try re-using reduce() here.
     if (arguments.length < 2)
       return (_.indexOf(collection, false) == -1) ? true : false;
-
-    // if it has undefined values 
-    if(_.indexOf(collection, undefined) !== -1)
+    if (_.indexOf(collection, undefined) !== -1)
       return false;
-    return _.reduce(collection, function(truthTest, item) { 
+    return _.reduce(collection, function(truthTest, item) {
       if (!iterator(item))
         truthTest = false;
-        return truthTest;
+      return truthTest;
     }, true);
-
-    return true;
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
