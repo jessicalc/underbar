@@ -183,10 +183,11 @@
     // (the third argument, false). 
 
     return _.reduce(collection, function(wasFound, item) {
-      if (wasFound) {             // so the stuff 
+      if (wasFound == true) {             // so the stuff 
         return true;              // in here
       }                           // is the
       return item === target;     // accumulator? 
+      // stick a console log
     }, false);
   };
 
@@ -194,7 +195,7 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    if (arguments.length < 2)
+    if (iterator == null)
       return (_.indexOf(collection, false) == -1) ? true : false;
     if (_.indexOf(collection, undefined) !== -1)
       return false;
@@ -210,7 +211,7 @@
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
     if (collection.length == 0) return false;
-    if (arguments.length < 2)
+    if (iterator == null)
       return (_.indexOf(collection, true) !== -1) ? true : false;
     if (_.every(collection, iterator) == true) {
       return true;
@@ -245,12 +246,11 @@
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
     var result = {};
+    result = obj;
     for (var key in obj) {
       result[key] = obj[key];
     }
     for (var i = 1; i < arguments.length; i++) {
-      if (arguments[i])
-        result = obj;
       for (key in arguments[i])
         result[key] = arguments[i][key];
     }
@@ -261,16 +261,16 @@
   // exists in obj
   _.defaults = function(obj) {
     var result = {};
+    result = obj;
     for (var key in obj) {
       result[key] = obj[key];
     }
     for (var i = 1; i < arguments.length; i++) {
-      if (arguments[i])
-        result = obj;
       for (key in arguments[i]) {
         if (obj.hasOwnProperty(key))
           result = obj;
-        else result[key] = arguments[i][key];
+        else
+          result[key] = arguments[i][key];
       }
     }
     return result;
@@ -317,8 +317,28 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    return _.once(func);
+    var alreadyCalled = false;
 
+    // create a memo object to store the arguments from the function the first time
+    // it's invoked. 
+    var memo = {};
+    var result;
+    return function() {
+      var args = Array.prototype.slice.call(arguments);
+      if (!alreadyCalled) {
+        console.log("first time running");
+        memo.origArgs = Array.prototype.slice.call(args);
+        result = func.apply(this, arguments);
+        alreadyCalled = true;
+      } else if (alreadyCalled && (args.join('') == memo.origArgs.join(''))) {
+        console.log("already called with the same args");
+        result = result; 
+      } else {
+        console.log("already called, but with diff args, so you need to run the function");
+        result = func.apply(this, arguments);
+      }
+      return result; 
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
