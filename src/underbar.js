@@ -245,36 +245,27 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-    var result = {};
-    result = obj;
-    for (var key in obj) {
-      result[key] = obj[key];
-    }
     for (var i = 1; i < arguments.length; i++) {
-      for (key in arguments[i])
-        result[key] = arguments[i][key];
+      for (var key in arguments[i]) {
+        obj[key] = arguments[i][key]
+      }
     }
-    return result;
+    return obj;
   };
+
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-    var result = {};
-    result = obj;
-    for (var key in obj) {
-      result[key] = obj[key];
-    }
     for (var i = 1; i < arguments.length; i++) {
-      for (key in arguments[i]) {
-        if (obj.hasOwnProperty(key))
-          result = obj;
-        else
-          result[key] = arguments[i][key];
+      for (var key in arguments[i]) {
+        if (!obj.hasOwnProperty(key)) 
+          obj[key] = arguments[i][key];
       }
     }
-    return result;
+    return obj;
   };
+
 
 
   /**
@@ -317,28 +308,23 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    var alreadyCalled = false;
-
-    // create a memo object to store the arguments from the function the first time
-    // it's invoked. 
     var memo = {};
-    var result;
+    var alreadyCalled = false;
+    var result; 
+
     return function() {
       var args = Array.prototype.slice.call(arguments);
       if (!alreadyCalled) {
-        console.log("first time running");
-        memo.origArgs = Array.prototype.slice.call(args);
         result = func.apply(this, arguments);
         alreadyCalled = true;
-      } else if (alreadyCalled && (args.join('') == memo.origArgs.join(''))) {
-        console.log("already called with the same args");
-        result = result; 
+        memo.origArgs = Array.prototype.slice.call(arguments);
+      } else if (alreadyCalled && (memo.origArgs.join('') === args.join(''))) {
+        result = result;
       } else {
-        console.log("already called, but with diff args, so you need to run the function");
         result = func.apply(this, arguments);
       }
-      return result; 
-    };
+      return result;
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -368,15 +354,15 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    var newArray = array.slice(0), temp;
-    for (var i = 0; i < newArray.length; i++) {
-      temp = Math.floor(Math.random() * newArray.length);
-      var word = newArray[temp];
-      newArray[temp] = newArray[i];
-      newArray[i] = word;
+    var result = array.slice(0);
+    for (var i = result.length - 1; i >= 0; i--) {
+      var random = Math.floor(Math.random() * result.length);
+      var temp = result[random];
+      result[random] = result[i];
+      result[i] = temp;
     }
-    return newArray;
-  };
+    return result;
+  }
 
 
   /**
