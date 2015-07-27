@@ -193,12 +193,9 @@
 
 
   // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
-    if (iterator == null)
-      return (_.indexOf(collection, false) == -1) ? true : false;
-    if (_.indexOf(collection, undefined) !== -1)
-      return false;
+   _.every = function(collection, iterator) {
+    if (iterator == null) 
+      return (_.indexOf(collection, false) !== -1) ? false : true;
     return _.reduce(collection, function(truthTest, item) {
       if (!iterator(item))
         truthTest = false;
@@ -211,18 +208,14 @@
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
     if (collection.length == 0) return false;
+    if (_.every(collection, iterator) == true) return true;
     if (iterator == null)
       return (_.indexOf(collection, true) !== -1) ? true : false;
-    if (_.every(collection, iterator) == true) {
-      return true;
-    } else {
-      return _.reduce(collection, function(truthTest, item) {
-        if (iterator(item) == true || typeof item == "string")
-          truthTest = true;
-        return truthTest;
-      }, false)
-    };
-    return false;
+    return _.reduce(collection, function(truthTest, item) {
+      if (iterator(item))
+        return true;
+      return truthTest;
+    }, false)
   };
 
 
@@ -334,12 +327,10 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    var params = [];
-    for (var i = 2; i < arguments.length; i++)
-      params.push(arguments[i]);
+    var args = Array.prototype.slice.call(arguments, 2);
     return setTimeout(function() {
-      return func.apply(null, params);
-    }, wait);
+      func.apply(this, args);
+    }, wait); 
   };
 
 
