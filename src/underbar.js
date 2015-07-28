@@ -368,9 +368,12 @@
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
     return _.map(collection, function(item, index, collection) {
-        return functionOrKey.apply(item, args);
+      if (typeof functionOrKey === "function")
+         return functionOrKey.apply(item, args);
+      var func = item[functionOrKey];
+      return func.apply(item);
     })
-  };
+};
 
   // Sort the object's values by a criterion produced by an iterator.
   // If iterator is a string, sort objects by that property with the name
